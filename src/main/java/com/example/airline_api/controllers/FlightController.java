@@ -42,7 +42,7 @@ public class FlightController {
         return new ResponseEntity<>(newFlight, HttpStatus.CREATED);
     }
 
-// Book passenger on a flight
+    // Book passenger on a flight
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Flight> addPassengerToFlight(@PathVariable Long id, @RequestBody String passengerName) {
         Flight updatedFlight = flightService.addPassengerToFlight(id, passengerName);

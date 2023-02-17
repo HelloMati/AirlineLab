@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/passengers")
@@ -26,22 +27,19 @@ public class PassengerController {
     // Display specific passenger details
     @GetMapping(value = "/{id}")
     public ResponseEntity<Passenger> getPassengerById(@PathVariable Long id){
-        Passenger passenger = passengerService.getPassengerById(id);
-        if(passenger == null){
+        Optional<Passenger> optionalPassenger = passengerService.getPassengerById(id);
+        if(optionalPassenger.isPresent()){
+            return new ResponseEntity<>(optionalPassenger.get(), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(passenger, HttpStatus.OK);
     }
 
     // Add a new passenger
     @PostMapping
-    public ResponseEntity<Passenger> addNewPassenger(@RequestBody Passenger newPassenger) {
-        Passenger passenger = passengerService.addNewPassenger(newPassenger);
-        if (passenger == null) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
-        return ResponseEntity.ok(passenger);
+    public ResponseEntity<Passenger> addNewPassenger(@RequestBody Passenger newpassenger){
+        Passenger passenger = passengerService.savePassenger(newpassenger);
+        return new ResponseEntity<>(passenger, HttpStatus.CREATED);
     }
-
 
 }
